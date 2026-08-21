@@ -19,6 +19,46 @@
 | El producto no existe | **404** |
 | La BD rechaza (PK duplicada) o falla | **500** (error del motor en `detalle`) |
 
+## 0.1 Las dos secuencias que explican los códigos de error
+
+**El 404 — cada capa aporta exactamente lo suyo** (dato → hecho, negocio
+→ decisión, HTTP → código):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Cli as Cliente HTTP
+    participant Ctl as ProductoController
+    participant Srv as ServicioProducto
+    participant Rep as RepositorioProductoPostgres
+    participant BD as PostgreSQL
+    Cli->>Ctl: GET /api/producto/PR999
+    Ctl->>Srv: ObtenerPorCodigoAsync("PR999")
+    Srv->>Rep: ObtenerPorCodigoAsync("PR999")
+    Rep->>BD: SELECT ... WHERE codigo = @codigo
+    BD-->>Rep: 0 filas
+    Rep-->>Srv: null (un HECHO, sin opinión)
+    Note over Srv: decide el significado:<br/>"no existe" es NEGOCIO
+    Srv--xCtl: lanza NoEncontradoExcepcion
+    Note over Ctl: traduce al idioma HTTP
+    Ctl-->>Cli: 404 {estado, mensaje, detalle}
+```
+
+**El 422 — la frontera corta ANTES del controlador** (por eso ninguna
+capa del proyecto contiene ese if):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Cli as Cliente HTTP
+    participant Fw as ASP.NET + la petición del verbo
+    participant Ctl as ProductoController
+    Cli->>Fw: POST /api/producto (body sin "nombre")
+    Note over Fw: ProductoCrear exige [Required] nombre —<br/>la validación DECLARADA falla
+    Fw-->>Cli: 422 {estado, mensaje, errores[]}
+    Note over Ctl: nunca se enteró:<br/>el body inválido no llegó a ninguna capa
+```
+
 ## 1. `GET /` — Diagnóstico
 
 ```

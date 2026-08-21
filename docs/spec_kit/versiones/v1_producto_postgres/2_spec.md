@@ -52,6 +52,18 @@ dejar el **esqueleto arquitectónico correcto** sobre el que las versiones
 siguientes agregan tablas (v2), motores (v3, v4), la API genérica (v5) y el
 frontend Flask (Jinja2) (v6) **sin reescribir lo construido**.
 
+**El contexto de la v1 en un diagrama** (nivel más alto del diseño: el
+sistema, sus vecinos y nada más):
+
+```mermaid
+flowchart LR
+    U["Cliente HTTP<br/>(navegador · Swagger · curl ·<br/>la IA que construye y prueba)"]
+    A["api_facturas<br/>C# / ASP.NET Core — :8052"]
+    B[("PostgreSQL<br/>bdfacturas COMPLETA, dada<br/>:15452")]
+    U -->|"JSON sobre HTTP<br/>(los 7 endpoints de esta spec)"| A
+    A -->|"SQL parametrizado<br/>(SOLO la tabla producto)"| B
+```
+
 ## 2. Alcance
 
 **Incluye:**

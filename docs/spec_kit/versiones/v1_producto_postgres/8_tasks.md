@@ -7,6 +7,21 @@
 
 ---
 
+**El orden de construcción, dibujado** — cada flecha lleva su compuerta
+de verificación (no se cruza en rojo). Note la dirección: de los datos
+hacia el HTTP, y el servicio se prueba ANTES de tener controller:
+
+```mermaid
+flowchart TB
+    F0["Fase 0 · BD y esqueleto"] -->|"psql ve 12 tablas, producto = 8"| F1["Fase 1 · Proyecto .NET + modelo Producto"]
+    F1 -->|"dotnet build compila"| F2["Fase 2 · Peticiones por verbo + excepción"]
+    F2 -->|"compila"| F3["Fase 3 · Interfaces + repositorio PostgreSQL"]
+    F3 -->|"compila"| F4["Fase 4 · Servicio + prueba de capas"]
+    F4 -->|"CRITERIO 6 OK (sin BD)"| F5["Fase 5 · Controller + Program.cs"]
+    F5 -->|"smoke test §2 del quickstart"| F6["Fase 6 · Docker: un solo comando"]
+    F6 -->|"up -d --build deja TODO andando"| F7["Fase 7 · Cierre: commit + tag v1"]
+```
+
 ## Fase 0 — Base de datos y esqueleto
 - [ ] Copiar a `db/` el archivo **provisto** con esta versión:
       `bdfacturas_postgres.sql` (la BD completa en dialecto PostgreSQL —

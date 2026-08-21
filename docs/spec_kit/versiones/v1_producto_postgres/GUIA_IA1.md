@@ -377,3 +377,9 @@ REGLAS (no negociables):
   deténgalo y pídale: "vuelve a la fase N y muéstrame su verificación".
 - **No le crea "terminado":** pídale la evidencia (la salida real de los
   comandos). El criterio de cierre es el smoke test corrido y en verde.
+
+> 📐 **Los diagramas Mermaid de las specs NO se quitan al subirlas:** son
+> texto que la IA lee como parte del contrato (la secuencia del 404 le
+> dice exactamente quién lanza la excepción y quién la traduce; el
+> diagrama de clases le dice qué interfaces existen). Un diagrama-imagen
+> sería invisible para el chat; un Mermaid es especificación ejecutable.

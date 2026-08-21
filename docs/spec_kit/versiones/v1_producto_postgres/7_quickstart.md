@@ -16,6 +16,18 @@ se siembra solo (el script montado corre al nacer el volumen). Al final:
 `postgres` (healthy) y `api-facturas` arriba. La primera compilación de
 `dotnet watch` toma ~30-60 segundos más.
 
+**El ciclo de validación de la versión** (la regla: no hay tag en rojo):
+
+```mermaid
+flowchart LR
+    A["docker compose up -d --build"] --> B{"¿:8052<br/>responde?"}
+    B -- "no (1ª vez)" --> W["esperar ~1 min<br/>(compilación inicial)"] --> B
+    B -- sí --> C["Smoke test §2<br/>(los 6 criterios)"]
+    C --> D{"¿todo<br/>en verde?"}
+    D -- no --> F["corregir y repetir"] --> C
+    D -- sí --> E["commit + tag v1<br/>(la versión CIERRA)"]
+```
+
 ## 2. Smoke test (equivale a los 6 criterios de 2_spec.md)
 
 ```powershell

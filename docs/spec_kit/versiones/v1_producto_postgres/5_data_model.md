@@ -32,6 +32,89 @@ almacenados** de consulta — todos esperando a las versiones siguientes.
 detalle, usuarios y roles. Credenciales de BD (didácticas): `sa` /
 `Diseno123!`.
 
+**El diagrama entidad-relación de bdfacturas** (las 12 tablas — la v1
+solo puede TOCAR `producto`, pero el diseño completo se conoce desde el
+día 1):
+
+```mermaid
+erDiagram
+    persona ||--o{ cliente : "fkcodpersona"
+    empresa |o--o{ cliente : "fkcodempresa (acepta NULL)"
+    persona ||--o{ vendedor : "fkcodpersona"
+    cliente ||--o{ factura : "fkidcliente"
+    vendedor ||--o{ factura : "fkidvendedor"
+    factura ||--|{ productosporfactura : "fknumfactura (ON DELETE CASCADE)"
+    producto ||--o{ productosporfactura : "fkcodproducto"
+    usuario ||--o{ rol_usuario : "fkemail"
+    rol ||--o{ rol_usuario : "fkidrol"
+    ruta ||--o{ rutarol : "fkidruta (CASCADE)"
+    rol ||--o{ rutarol : "fkidrol (CASCADE)"
+
+    producto {
+        varchar codigo PK
+        varchar nombre
+        int stock
+        numeric valorunitario
+    }
+    persona {
+        varchar codigo PK
+        varchar nombre
+        varchar email
+        varchar telefono
+    }
+    empresa {
+        varchar codigo PK
+        varchar nombre
+    }
+    cliente {
+        serial id PK
+        numeric credito "DEFAULT 0"
+        varchar fkcodpersona FK
+        varchar fkcodempresa FK "NULL"
+    }
+    vendedor {
+        serial id PK
+        int carnet
+        varchar direccion
+        varchar fkcodpersona FK
+    }
+    factura {
+        serial numero PK
+        timestamp fecha
+        numeric total "lo escribe el TRIGGER"
+        varchar estado "activa - anulada"
+        int fkidcliente FK
+        int fkidvendedor FK
+    }
+    productosporfactura {
+        int fknumfactura PK, FK
+        varchar fkcodproducto PK, FK
+        int cantidad
+        numeric subtotal "lo escribe el TRIGGER"
+    }
+    usuario {
+        varchar email PK
+        varchar contrasena "hash BCrypt"
+    }
+    rol {
+        serial id PK
+        varchar nombre
+    }
+    ruta {
+        serial id PK
+        varchar ruta UK
+        varchar descripcion
+    }
+    rol_usuario {
+        varchar fkemail PK, FK
+        int fkidrol PK, FK
+    }
+    rutarol {
+        int fkidruta PK, FK
+        int fkidrol PK, FK
+    }
+```
+
 ## 2. Lo ÚNICO que la v1 puede nombrar: la tabla `producto`
 
 | Columna | Tipo (PostgreSQL) | Regla |

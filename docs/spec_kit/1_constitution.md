@@ -49,6 +49,30 @@ HTTP → Controller (valida el body contra la PETICIÓN del verbo → 422)
   (`ArgumentException` → 400 · `NoEncontradoExcepcion` → 404) y el
   controlador las traduce a HTTP.
 
+**La regla del Artículo 3, dibujada** (las flechas son las ÚNICAS
+dependencias permitidas — cruzar capas o saltárselas viola la
+constitución):
+
+```mermaid
+flowchart TB
+    subgraph API["api_facturas — las tres capas"]
+        C["Controller<br/>(HTTP: códigos y JSON)"]
+        IS["IServicio<br/>&lt;&lt;interfaz&gt;&gt;"]
+        S["Servicio<br/>(reglas de negocio)"]
+        IR["IRepositorio<br/>&lt;&lt;interfaz&gt;&gt;"]
+        R["Repositorio<br/>(SQL parametrizado)"]
+    end
+    BD[("Base de datos")]
+    C -->|"conoce SOLO la interfaz"| IS
+    S -.->|implementa| IS
+    S -->|"conoce SOLO la interfaz"| IR
+    R -.->|implementa| IR
+    R -->|"ADO.NET"| BD
+```
+
+(Los diagramas de este proyecto son **Mermaid**: texto plano que GitHub
+dibuja y que una IA lee como parte de la especificación.)
+
 ## Artículo 4 — Un solo comando
 
 `docker compose up -d --build` deja TODO el sistema de la versión

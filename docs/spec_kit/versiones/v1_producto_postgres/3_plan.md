@@ -65,6 +65,88 @@ HTTP → ASP.NET routing        (los atributos [HttpGet]/[HttpPost]… deciden e
 Solo el ENSAMBLADOR (la sección de DI de `Program.cs`) conoce clases
 concretas.
 
+### 3.1 Los planos del diseño (Mermaid: texto que la IA también lee)
+
+**Arquitectura de despliegue** — lo que levanta `docker compose up -d`:
+
+```mermaid
+flowchart LR
+    NAV["Navegador / curl / Swagger"]
+    subgraph PC["Su PC — Docker Desktop"]
+        subgraph COMP["docker compose (UN comando)"]
+            API["api-facturas<br/>imagen sdk .NET 10 + dotnet watch<br/>puerto 8052"]
+            PG[("postgres:16-alpine<br/>puerto 15452 · volumen pgdata<br/>se siembra SOLO la 1ª vez")]
+        end
+    end
+    NAV -->|"localhost:8052"| API
+    API -->|"red interna: postgres:5432"| PG
+```
+
+**Diagrama de clases de la rebanada producto** — las dependencias cruzan
+por INTERFACES (la D de SOLID, visible):
+
+```mermaid
+classDiagram
+    class ProductoController {
+        +Listar(limite)
+        +Obtener(codigo)
+        +Crear(ProductoCrear)
+        +Reemplazar(codigo, ProductoReemplazo)
+        +Actualizar(codigo, ProductoActualizar)
+        +Eliminar(codigo)
+    }
+    class IServicioProducto {
+        <<interface>>
+    }
+    class ServicioProducto {
+        -IRepositorioProducto repositorio
+    }
+    class IRepositorioProducto {
+        <<interface>>
+        +ObtenerTodosAsync(limite)
+        +ObtenerPorCodigoAsync(codigo)
+        +CrearAsync(producto)
+        +ActualizarAsync(codigo, datos)
+        +EliminarAsync(codigo)
+    }
+    class RepositorioProductoPostgres {
+        -string cadenaConexion
+    }
+    class Producto {
+        +string Codigo
+        +string Nombre
+        +int Stock
+        +decimal Valorunitario
+    }
+    ProductoController --> IServicioProducto : recibe por constructor
+    ServicioProducto ..|> IServicioProducto : implementa
+    ServicioProducto --> IRepositorioProducto : recibe por constructor
+    RepositorioProductoPostgres ..|> IRepositorioProducto : implementa
+    RepositorioProductoPostgres ..> Producto : arma desde filas
+```
+
+**Secuencia del camino feliz** — `GET /api/producto/PR001` viajando por
+las capas (compárela con las secuencias de ERROR en
+[6_contracts.md](6_contracts.md)):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Cli as Cliente HTTP
+    participant Ctl as ProductoController
+    participant Srv as ServicioProducto
+    participant Rep as RepositorioProductoPostgres
+    participant BD as PostgreSQL
+    Cli->>Ctl: GET /api/producto/PR001
+    Ctl->>Srv: ObtenerPorCodigoAsync("PR001")
+    Srv->>Rep: ObtenerPorCodigoAsync("PR001")
+    Rep->>BD: SELECT ... WHERE codigo = @codigo
+    BD-->>Rep: 1 fila
+    Rep-->>Srv: objeto Producto
+    Srv-->>Ctl: objeto Producto
+    Ctl-->>Cli: 200 + JSON
+```
+
 ## 4. Decisiones de diseño clave
 
 ### 4.1 Interfaces de C# desde v1
