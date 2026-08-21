@@ -6,25 +6,46 @@
 
 ---
 
-## D1 — Dapper como micro-ejecutor: SQL a mano, sin Entity Framework
+## D1 — El ejecutor de la capa de datos: Dapper (un ADR completo)
 
-**Alternativas descartadas:** (a) Entity Framework Core (el ORM de .NET)
-· (b) ADO.NET "crudo" (`NpgsqlCommand` + `DataReader` con el mapeo
-`GetString(0)` a mano).
-**Decisión:** **Dapper** sobre la conexión de Npgsql: `QueryAsync<T>` y
-`ExecuteAsync` reciben el SQL ESCRITO A MANO y parametrizado; Dapper solo
-mapea columna→propiedad por nombre.
-**Por qué:** este es un curso de DISEÑO — el foco está en las capas, los
-contratos y las decisiones, no en el ritual del `DataReader`. EF quedó
-descartado porque esconde exactamente lo que el curso exige ver (el SQL);
-Dapper NO lo esconde: cada consulta del sistema existe como texto en su
-repositorio, parametrizada. Y en rendimiento, su mapeo con código
-cacheado queda prácticamente empatado con el mapeo manual (y muy por
-encima de EF en lecturas).
-**Precio asumido:** el estudiante no escribe el ciclo
-conexión→comando→lector (esa lección queda para los cursos gemelos que
-usan ADO.NET crudo); a cambio, los repositorios quedan más cortos y el
-diseño más visible.
+> Este documento funciona como registro de decisiones de arquitectura
+> (**ADR**, *Architecture Decision Record*): cada D# captura contexto →
+> opciones → criterios → decisión → consecuencias, y se versiona con el
+> código. Esta D1 es el ejemplo más completo del formato.
+
+**Contexto.** La capa de repositorios necesita (1) ejecutar SQL contra
+el motor y (2) mapear filas ↔ objetos del modelo. Restricción de la
+constitución (Art. 2): el SQL debe quedar VISIBLE en el código y SIEMPRE
+parametrizado.
+
+**Opciones evaluadas:** (a) Entity Framework Core (ORM de entidades) ·
+(b) **Dapper** (micro-ejecutor) · (c) ADO.NET "crudo"
+(`NpgsqlConnection` + `NpgsqlCommand` con el mapeo `GetString(0)` a mano).
+
+**Criterios de ingeniería y comparación:**
+
+| Criterio | EF Core | Dapper | ADO.NET crudo |
+|---|---|---|---|
+| SQL visible en el repositorio | ✗ (lo genera LINQ) | ✓ (se escribe a mano) | ✓ |
+| Parametrización (anti-inyección) | ✓ | ✓ (`@param`) | ✓ (`@param`) |
+| Rendimiento en lecturas | menor (tracking, traducción) | ≈ manual (mapeo con código emitido y CACHEADO) | máximo teórico |
+| Líneas por método del repositorio | pocas | pocas | muchas (ciclo conexión→comando→lector) |
+| Riesgo de abstracción con fuga | alto (N+1, tracking sorpresa) | bajo (no decide nada) | ninguno |
+| Dependencias | pesada | 1 paquete MIT, estable | ninguna |
+| Testabilidad de las capas | igual en las tres: la da la ARQUITECTURA (interfaces + repos falsos), no el ejecutor | | |
+
+**Decisión: (b) Dapper.** `QueryAsync<T>`/`ExecuteAsync` reciben el SQL
+escrito a mano; Dapper solo mapea columna→propiedad por nombre. EF queda
+descartado por el criterio 1 (esconde exactamente lo que la constitución
+exige ver); frente al crudo, Dapper empata en los criterios técnicos y
+gana en costo de código.
+
+**Consecuencias.** (+) Repositorios cortos y uniformes; el diseño queda
+más visible que el ritual de infraestructura. (+) Sin lock-in: quitar
+Dapper es volver a escribir el mapeo manual — el SQL no cambia. (−) El
+ciclo conexión→comando→lector no se practica aquí (quien quiera verlo lo
+tiene en los materiales del ecosistema del curso). (−) Una dependencia
+más, mitigada por licencia MIT y madurez del paquete.
 
 ## D2 — Capas completas desde el día 1 (y no un MVP en un solo archivo)
 
