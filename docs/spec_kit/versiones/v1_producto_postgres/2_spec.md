@@ -16,6 +16,7 @@
 > | [6_contracts.md](6_contracts.md) | Los 7 endpoints con formatos exactos |
 > | [7_quickstart.md](7_quickstart.md) | Arranque y smoke test |
 > | [8_tasks.md](8_tasks.md) | Orden de construcción por fases verificables |
+> | [HISTORIAS_DE_USUARIO.md](HISTORIAS_DE_USUARIO.md) | Las MISMAS exigencias como historias de usuario (tarjetas con criterios) |
 
 ---
 
@@ -165,6 +166,13 @@ inexistente → 404.
   en v1 (los introduce la v3 cuando exista el segundo motor).
 
 ## 5. Criterios de aceptación
+
+> Estos criterios también están expresados como **historias de usuario**
+> (formato de tarjeta del curso, con personajes del dominio) en
+> [HISTORIAS_DE_USUARIO.md](HISTORIAS_DE_USUARIO.md) — misma exigencia,
+> dos lenguajes: el de la spec (para construir) y el de la historia
+> (para conversar con el usuario). Si alguna vez se contradicen, se
+> corrige una de las dos EN EL MISMO COMMIT.
 
 1. **`docker compose up -d --build` — un solo comando —** deja corriendo
    PostgreSQL (inicializado con el script provisto: 12 tablas), y la API;
