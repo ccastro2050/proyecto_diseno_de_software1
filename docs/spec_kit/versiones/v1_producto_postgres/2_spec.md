@@ -64,6 +64,15 @@ flowchart LR
     A -->|"SQL parametrizado<br/>(SOLO la tabla producto)"| B
 ```
 
+**Cómo leer un diagrama de contexto:** las CAJAS son quién participa
+(el cilindro es la convención para una base de datos); las FLECHAS son
+las conversaciones que cruzan la frontera del sistema, con su idioma
+escrito encima. La caja del centro es **lo único que esta versión
+construye**: el cliente es de afuera, y la BD viene dada (Artículo 5).
+En una frase: *alguien le habla JSON a la API por el 8052, y la API le
+habla SQL parametrizado a una BD que ya existe — nada más pasa en la v1.*
+
+
 ## 2. Alcance
 
 **Incluye:**
