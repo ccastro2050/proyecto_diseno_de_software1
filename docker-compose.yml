@@ -1,8 +1,8 @@
 # ==============================================================
-# Proyecto Construcción de Software — versión 1:
+# Proyecto Diseño de Software — versión 1:
 # api_facturas (C#/ASP.NET Core) + PostgreSQL
 #
-#   Navegador → API FACTURAS (C#, :8042) → PostgreSQL (bdfacturas)
+#   Navegador → API FACTURAS (C#, :8052) → PostgreSQL (bdfacturas)
 #
 # Uso: docker compose up -d --build     (UN solo comando)
 # Reset de la BD: docker compose down -v && docker compose up -d
@@ -16,7 +16,7 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_PASSWORD: "Construccion123!"    # clave del superusuario 'postgres'
+      POSTGRES_PASSWORD: "Diseno123!"    # clave del superusuario 'postgres'
       POSTGRES_DB: bdfacturas_postgres_local   # la BD que crea al nacer
     volumes:
       - pgdata:/var/lib/postgresql/data        # los datos sobreviven a `down`
@@ -25,7 +25,7 @@ services:
       # necesita contenedor inicializador:
       - ./db/bdfacturas_postgres.sql:/docker-entrypoint-initdb.d/bdfacturas_postgres.sql:ro
     ports:
-      - "15442:5432"     # puerto en su PC (para SQLTools/pgAdmin opcional)
+      - "15452:5432"     # puerto en su PC (para SQLTools/pgAdmin opcional)
     healthcheck:
       # ¿La BD ya RESPONDE consultas? (no solo "el contenedor existe")
       test: ["CMD-SHELL", "pg_isready -U postgres -d bdfacturas_postgres_local"]
@@ -42,13 +42,13 @@ services:
       - /app/obj                 #   sin mezclarse con los compilados de Windows
     restart: unless-stopped
     ports:
-      - "8042:8042"              # http://localhost:8042
+      - "8052:8052"              # http://localhost:8052
     environment:
       # La cadena usa el NOMBRE del servicio como host (postgres:5432),
       # no localhost: dentro de la red interna de compose los servicios
       # se resuelven por nombre. Esta variable SOBREESCRIBE el valor de
       # appsettings.json (ASP.NET lee "ConnectionStrings__X" así).
-      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=bdfacturas_postgres_local;Username=postgres;Password=Construccion123!"
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=bdfacturas_postgres_local;Username=postgres;Password=Diseno123!"
     depends_on:
       postgres:
         condition: service_healthy

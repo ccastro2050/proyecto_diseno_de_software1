@@ -1,4 +1,4 @@
-# Proyecto Construcción de Software — construcción por versiones
+# Proyecto Diseño de Software — construcción por versiones
 
 Proyecto de curso (ITM). Aquí NO se descarga un sistema terminado:
 **se construye un sistema real por versiones en C# / ASP.NET Core**, guiado
@@ -26,8 +26,8 @@ curso, funcionando** — usted la ejecuta, la estudia y luego la
 En la terminal integrada de VS Code (*Terminal → New Terminal*, PowerShell):
 
 ```powershell
-git clone https://github.com/ccastro2050/proyecto_construccion_de_software1.git
-cd proyecto_construccion_de_software1
+git clone https://github.com/ccastro2050/proyecto_diseno_de_software1.git
+cd proyecto_diseno_de_software1
 docker compose up -d --build
 ```
 
@@ -38,16 +38,16 @@ completa en PostgreSQL) y la API:
 
 | Qué | Dónde |
 |---|---|
-| **API Facturas** — diagnóstico | http://localhost:8042/ |
-| **Swagger** (documentación interactiva: ver y probar los endpoints) | http://localhost:8042/swagger |
-| Listar productos | http://localhost:8042/api/producto |
-| PostgreSQL (para SQLTools/pgAdmin, opcional) | `localhost:15442` · `postgres`/`Construccion123!` |
+| **API Facturas** — diagnóstico | http://localhost:8052/ |
+| **Swagger** (documentación interactiva: ver y probar los endpoints) | http://localhost:8052/swagger |
+| Listar productos | http://localhost:8052/api/producto |
+| PostgreSQL (para SQLTools/pgAdmin, opcional) | `localhost:15452` · `postgres`/`Diseno123!` |
 
 Pruebe la joya didáctica de la v1: PUT con solo `{"stock": 99}` → 422; el
 mismo body en PATCH → 200. Esa diferencia es parte de lo que enseña la
 versión (contratos exactos en el spec kit).
 
-> ℹ️ Este proyecto usa los puertos 8042 y 15442: si alguno ya está ocupado
+> ℹ️ Este proyecto usa los puertos 8052 y 15452: si alguno ya está ocupado
 > en su máquina, cámbielo en `docker-compose.yml` (el lado izquierdo del
 > `"puerto:puerto"`).
 >
@@ -103,7 +103,7 @@ siguiendo las especificaciones — con o sin ayuda de IA:
 Qué es cada carpeta y cada archivo, y para qué sirve:
 
 ```
-proyecto_construccion_de_software1/
+proyecto_diseno_de_software1/
 ├── docker-compose.yml           # TODO el sistema declarado: PostgreSQL + API
 │                                #   (el "un solo comando" del proyecto)
 ├── db/
@@ -114,10 +114,10 @@ proyecto_construccion_de_software1/
 ├── postman/                     # La colección de Postman lista para importar:
 │                                #   los 13 endpoints en orden didáctico (alternativa a Swagger)
 │
-├── api_facturas/                # LA API DE LA v1 — C#/ASP.NET Core (puerto 8042)
+├── api_facturas/                # LA API DE LA v1 — C#/ASP.NET Core (puerto 8052)
 │   ├── ApiFacturas.csproj       # El proyecto .NET (paquetes: Npgsql y Swashbuckle)
 │   ├── Program.cs               # Punto de entrada: ENSAMBLADOR (DI) + 422 + rutas
-│   ├── appsettings.json         # Cadena de conexión (default localhost:15442)
+│   ├── appsettings.json         # Cadena de conexión (default localhost:15452)
 │   ├── Dockerfile               # Imagen sdk:10.0 + dotnet watch
 │   ├── Controllers/             # Capa 1 — HTTP: atributos de verbo y try/catch → códigos
 │   ├── Modelos/                 # Los MODELOS = las clases ENTIDAD (v1: Producto)
@@ -196,5 +196,5 @@ de aceptación (commit + tag). Mapa completo:
 
 ---
 
-*Proyecto Construcción de Software · ITM · Base de datos bdfacturas
+*Proyecto Diseño de Software · ITM · Base de datos bdfacturas
 (facturación + RBAC).*

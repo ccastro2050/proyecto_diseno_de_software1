@@ -30,7 +30,7 @@ almacenados** de consulta — todos esperando a las versiones siguientes.
 
 **Datos de ejemplo:** 8 productos (PR001…PR008), 6 personas, 6 facturas con
 detalle, usuarios y roles. Credenciales de BD (didácticas): `sa` /
-`Construccion123!`.
+`Diseno123!`.
 
 ## 2. Lo ÚNICO que la v1 puede nombrar: la tabla `producto`
 

@@ -1,6 +1,6 @@
 ﻿-- ============================================================
 -- bdfacturas_postgres_local — la base de datos COMPLETA del curso
--- Construcción de Software (infraestructura dada desde la v1)
+-- Diseño de Software (infraestructura dada desde la v1)
 --
 -- 12 tablas, el trigger de totales/stock, los SPs de factura y los
 -- datos semilla. La v1 solo usa la tabla producto; el resto espera

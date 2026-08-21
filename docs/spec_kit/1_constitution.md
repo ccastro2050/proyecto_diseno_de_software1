@@ -80,9 +80,9 @@ PATCH (parcial → 200 con el mismo body).
 
 | Cosa | Convención |
 |---|---|
-| Puertos del proyecto | API facturas **8042** · PostgreSQL **15442** (reservados: front 8030, API genérica 8031, PostgreSQL 15462, MariaDB 13336) |
+| Puertos del proyecto | API facturas **8052** · PostgreSQL **15452** (reservados: front 8030, API genérica 8031, PostgreSQL 15462, MariaDB 13336) |
 | Rutas | `/` (diagnóstico) · `/swagger` (documentación interactiva) · `/api/producto` (v1) |
 | Nombres | PascalCase en español; interfaces con prefijo `I`; carpetas `Controllers/ Modelos/ Peticiones/ Servicios/ Repositorios/ Excepciones/ pruebas/` (`Modelos/` = clases entidad; `Peticiones/` = el body de cada verbo) |
 | Sobre de respuesta | Lecturas: `{tabla, limite, total, datos}` · Errores: `{estado, mensaje, detalle}` (+ `errores:[…]` en el 422) |
 | Errores | Body inválido (la petición) → **422** · `ArgumentException` → **400** · `NoEncontradoExcepcion` → **404** · `NpgsqlException` y demás → **500** |
-| Credenciales (didácticas) | BD: `sa` / `Construccion123!` · base `bdfacturas_postgres_local` |
+| Credenciales (didácticas) | BD: `sa` / `Diseno123!` · base `bdfacturas_postgres_local` |
