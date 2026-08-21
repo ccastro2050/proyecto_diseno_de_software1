@@ -181,6 +181,7 @@ de aceptación (commit + tag). Mapa completo:
 | [6_contracts.md](docs/spec_kit/versiones/v1_producto_postgres/6_contracts.md) | Los 7 endpoints con formatos exactos |
 | [7_quickstart.md](docs/spec_kit/versiones/v1_producto_postgres/7_quickstart.md) | Arranque y smoke test |
 | [8_tasks.md](docs/spec_kit/versiones/v1_producto_postgres/8_tasks.md) | Orden de construcción por fases verificables |
+| [HISTORIAS_DE_USUARIO.md](docs/spec_kit/versiones/v1_producto_postgres/HISTORIAS_DE_USUARIO.md) | Los requisitos como historias de usuario (tarjetas con criterios de aceptación) |
 
 ## 5. Material conceptual del curso
 
