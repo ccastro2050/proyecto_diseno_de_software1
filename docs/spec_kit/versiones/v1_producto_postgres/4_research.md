@@ -6,17 +6,25 @@
 
 ---
 
-## D1 — ADO.NET crudo: sin Entity Framework (ni Dapper)
+## D1 — Dapper como micro-ejecutor: SQL a mano, sin Entity Framework
 
-**Alternativas descartadas:** Entity Framework Core (el ORM de .NET) y
-Dapper (micro-ORM).
-**Decisión:** `NpgsqlConnection` + `NpgsqlCommand` con SQL parametrizado a mano.
-**Por qué:** el objetivo es aprender **SQL y arquitectura**, no un ORM. EF
-esconde exactamente lo que el curso quiere mostrar (el SQL, el mapeo, las
-transacciones); Dapper es razonable pero igual tapa el ciclo
-conexión→comando→lector que un estudiante debe ver una vez en la vida.
-**Precio asumido:** más líneas por método del repositorio — cada una es
-lección.
+**Alternativas descartadas:** (a) Entity Framework Core (el ORM de .NET)
+· (b) ADO.NET "crudo" (`NpgsqlCommand` + `DataReader` con el mapeo
+`GetString(0)` a mano).
+**Decisión:** **Dapper** sobre la conexión de Npgsql: `QueryAsync<T>` y
+`ExecuteAsync` reciben el SQL ESCRITO A MANO y parametrizado; Dapper solo
+mapea columna→propiedad por nombre.
+**Por qué:** este es un curso de DISEÑO — el foco está en las capas, los
+contratos y las decisiones, no en el ritual del `DataReader`. EF quedó
+descartado porque esconde exactamente lo que el curso exige ver (el SQL);
+Dapper NO lo esconde: cada consulta del sistema existe como texto en su
+repositorio, parametrizada. Y en rendimiento, su mapeo con código
+cacheado queda prácticamente empatado con el mapeo manual (y muy por
+encima de EF en lecturas).
+**Precio asumido:** el estudiante no escribe el ciclo
+conexión→comando→lector (esa lección queda para los cursos gemelos que
+usan ADO.NET crudo); a cambio, los repositorios quedan más cortos y el
+diseño más visible.
 
 ## D2 — Capas completas desde el día 1 (y no un MVP en un solo archivo)
 

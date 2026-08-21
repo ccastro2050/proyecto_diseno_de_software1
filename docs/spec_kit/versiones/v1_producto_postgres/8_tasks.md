@@ -63,10 +63,11 @@ y `SELECT count(*) FROM producto` da **8**.
 - [ ] `Repositorios/IRepositorioProducto.cs`: interface con los 5 métodos
       async ([3_plan.md](3_plan.md) §4.1).
 - [ ] `Servicios/IServicioProducto.cs`: interface del servicio.
-- [ ] `Repositorios/RepositorioProductoPostgres.cs`: ADO.NET con los SQL
-      de [3_plan.md](3_plan.md) §4.4 — `LIMIT @limite`, parámetros `@`,
-      conexión por operación con `await using`, y el UPDATE con SET
-      dinámico de lista blanca.
+- [ ] `Repositorios/RepositorioProductoPostgres.cs`: Dapper con los SQL
+      de [3_plan.md](3_plan.md) §4.4 — `QueryAsync<Producto>` para
+      lecturas y `ExecuteAsync` para escrituras, `LIMIT @limite`,
+      parámetros `@`, y el UPDATE con SET dinámico de lista blanca
+      (`DynamicParameters` sobre el diccionario).
 
 **Verificar:** `dotnet build` compila sin errores.
 
