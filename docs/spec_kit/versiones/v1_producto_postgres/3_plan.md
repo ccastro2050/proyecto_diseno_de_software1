@@ -67,20 +67,34 @@ concretas.
 
 ### 3.1 Los planos del diseño (Mermaid: texto que la IA también lee)
 
-**Arquitectura de despliegue** — lo que levanta `docker compose up -d`:
+**Arquitectura de despliegue** — lo que levanta `docker compose up -d`
+es un **sistema de servidores en miniatura**: cada contenedor se comporta
+como un servidor independiente, con su propio nombre de host, conectados
+por una red interna privada — igual que en un centro de datos, pero
+dentro de su PC:
 
 ```mermaid
 flowchart LR
-    NAV["Navegador / curl / Swagger"]
-    subgraph PC["Su PC — Docker Desktop"]
-        subgraph COMP["docker compose (UN comando)"]
-            API["api-facturas<br/>imagen sdk .NET 10 + dotnet watch<br/>puerto 8052"]
-            PG[("postgres:16-alpine<br/>puerto 15452 · volumen pgdata<br/>se siembra SOLO la 1ª vez")]
+    NAV["Navegador / curl / Swagger<br/>(el mundo exterior)"]
+    subgraph PC["Su PC — Docker Desktop (el 'centro de datos')"]
+        subgraph RED["red interna privada del compose (una LAN virtual)"]
+            API["SERVIDOR DE APLICACIONES<br/>contenedor api-facturas<br/>hostname interno: api-facturas<br/>.NET 10 + dotnet watch · escucha en 8052"]
+            PG[("SERVIDOR DE BASE DE DATOS<br/>contenedor postgres<br/>hostname interno: postgres<br/>postgres:16-alpine · escucha en 5432<br/>volumen pgdata · se siembra SOLO la 1ª vez")]
         end
     end
-    NAV -->|"localhost:8052"| API
-    API -->|"red interna: postgres:5432"| PG
+    NAV -->|"ÚNICA puerta publicada al exterior:<br/>localhost:8052"| API
+    API -->|"por la LAN interna, por NOMBRE:<br/>postgres:5432 (DNS de Docker)"| PG
+    NAV -.->|"puerta opcional de diagnóstico:<br/>localhost:15452 (DBeaver/pgAdmin)"| PG
 ```
+
+**Guía de lectura:** son DOS servidores, no un programa. La API no busca
+la BD en `localhost` sino en el hostname `postgres` — Docker tiene su
+propio DNS y resuelve el nombre del servicio a la IP interna del
+contenedor, como en una red de servidores real. Hacia afuera solo se
+publican las puertas que el compose declara (`8052` para usar el
+sistema; `15452` solo para inspeccionar la BD con una herramienta). Por
+eso el MISMO diseño que corre en su PC se despliega igual en un servidor
+de verdad: cambiar de máquina no cambia la arquitectura.
 
 **Diagrama de clases de la rebanada producto** — las dependencias cruzan
 por INTERFACES (la D de SOLID, visible):
