@@ -34,10 +34,34 @@ var builder = WebApplication.CreateBuilder(args);
 var cadenaConexion = builder.Configuration.GetConnectionString("Postgres")
     ?? throw new InvalidOperationException("Falta la cadena de conexión 'Postgres'.");
 
-// AddScoped = "una instancia por petición HTTP" (cada request estrena la suya):
+// AddScoped = "una instancia por peticion HTTP" (cada request estrena la suya).
+// Es el ensamblador, y crece de a una linea por recurso. Esa lista larga es
+// deliberada: cuando llegue el SEGUNDO MOTOR -la v5- es el argumento de la
+// fabrica, y el dolor de hoy es lo que la justifica.
+
+// ------------------------------------------------------------
+// LA v1 — las SEIS tablas SIN clave foranea
+// ------------------------------------------------------------
+// El criterio de la v1 es ese y no otro: ninguna de estas seis depende de
+// otra fila para existir, asi que se pueden construir en cualquier orden.
 builder.Services.AddScoped<IRepositorioProducto>(
     _ => new RepositorioProductoPostgres(cadenaConexion));
 builder.Services.AddScoped<IServicioProducto, ServicioProducto>();
+builder.Services.AddScoped<IRepositorioEmpresa>(
+    _ => new RepositorioEmpresaPostgres(cadenaConexion));
+builder.Services.AddScoped<IServicioEmpresa, ServicioEmpresa>();
+builder.Services.AddScoped<IRepositorioPersona>(
+    _ => new RepositorioPersonaPostgres(cadenaConexion));
+builder.Services.AddScoped<IServicioPersona, ServicioPersona>();
+builder.Services.AddScoped<IRepositorioRol>(
+    _ => new RepositorioRolPostgres(cadenaConexion));
+builder.Services.AddScoped<IServicioRol, ServicioRol>();
+builder.Services.AddScoped<IRepositorioRuta>(
+    _ => new RepositorioRutaPostgres(cadenaConexion));
+builder.Services.AddScoped<IServicioRuta, ServicioRuta>();
+builder.Services.AddScoped<IRepositorioUsuario>(
+    _ => new RepositorioUsuarioPostgres(cadenaConexion));
+builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
 
 // ------------------------------------------------------------
 // 2. Los controladores y la validación de la petición (el 422)

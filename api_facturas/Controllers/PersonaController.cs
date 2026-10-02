@@ -1,24 +1,15 @@
 // ============================================================
-// ProductoController — la capa HTTP de la v1.
+// PersonaController — la capa HTTP de persona.
 //
-// Su único trabajo: recibir la petición (ASP.NET ya validó el
-// body contra la PETICIÓN del verbo → 422 automático), delegar al
-// servicio, y responder JSON con el código correcto.
-// Aquí NO hay SQL ni reglas de negocio.
-//
-// ¿DÓNDE ESTÁ EL GET, EL POST...? En los ATRIBUTOS sobre cada
-// método: [HttpGet], [HttpPost], [HttpPut], [HttpPatch],
-// [HttpDelete]. ASP.NET lee el verbo y la ruta de la petición
-// que llegó y llama al método cuyo atributo coincida — la misma
-// comparación que en otros stacks se escribe a mano, aquí la
-// hace el framework por dentro.
-//
-// Traducción a códigos HTTP (contrato de 6_contracts.md §0):
-//   Body con errores de forma → 422 (lo arma Program.cs con la
-//                                    lista de errores de la petición)
-//   ArgumentException         → 400 (regla de negocio)
+// CALCADO de ProductoController (allí está explicado dónde vive
+// el GET, el 422 automático y la traducción de excepciones).
+// Mismos 6 métodos, misma tabla de códigos:
+//   Body con errores de forma → 422 (Program.cs)
+//   ArgumentException         → 400
 //   NoEncontradoExcepcion     → 404
-//   NpgsqlException y demás      → 500 (mensaje del motor en detalle)
+//   PostgresException y demás      → 500  ← aquí cae la llave foránea al
+//                                      eliminar una persona que es
+//                                      cliente o vendedor (¡pruébelo!)
 // ============================================================
 
 using ApiFacturas.Excepciones;
@@ -29,78 +20,59 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiFacturas.Controllers;
 
-// [ApiController] activa la validación automática del body contra el
-// body contra su petición (el 422) y el enlace de parámetros.
-// [Route("api/producto")] = TODAS las rutas de esta clase cuelgan de ahí.
 [ApiController]
-[Route("api/producto")]
-public class ProductoController : ControllerBase
+[Route("api/persona")]
+public class PersonaController : ControllerBase
 {
-    // La dependencia: LA INTERFAZ del servicio (no una clase concreta).
-    // readonly = se asigna una vez, en el constructor.
-    private readonly IServicioProducto _servicio;
+    private readonly IServicioPersona _servicio;
 
-    // El constructor la recibe YA CONSTRUIDA (la inyecta el ensamblador
-    // registrado en Program.cs):
-    public ProductoController(IServicioProducto servicio)
+    public PersonaController(IServicioPersona servicio)
     {
         _servicio = servicio;
     }
 
     // ------------------------------------------------------------
-    // GET /api/producto[?limite=N]  →  listar
+    // GET /api/persona[?limite=N]  →  listar
     // ------------------------------------------------------------
-    // [FromQuery] = el parámetro viene del query string; si no viene,
-    // vale 1000 (el valor por defecto declarado).
     [HttpGet]
     public async Task<IActionResult> Listar([FromQuery] int limite = 1000)
     {
         try
         {
-            var productos = await _servicio.ListarAsync(limite);
+            var personas = await _servicio.ListarAsync(limite);
 
-            if (productos.Count == 0)
+            if (personas.Count == 0)
             {
-                // 204 = éxito SIN contenido: tabla vacía.
-                return NoContent();
+                return NoContent();   // 204: tabla vacía no es un error
             }
-            // Ok(...) = 200 con el objeto como JSON. La "envoltura" de
-            // las lecturas: metadatos + datos.
             return Ok(new
             {
-                tabla = "producto",
+                tabla = "persona",
                 limite,
-                total = productos.Count,
-                datos = productos,
+                total = personas.Count,
+                datos = personas,
             });
         }
         catch (ArgumentException e)
         {
-            // Regla de negocio rota (ej. límite <= 0) → 400.
-            // StatusCode(código, objeto) = responde ese JSON con ese código:
             return StatusCode(400, new { estado = 400, mensaje = "Parámetros inválidos.", detalle = e.Message });
         }
         catch (Exception e)
         {
-            // Exception atrapa TODO lo demás (ej. la BD no responde) → 500:
             return StatusCode(500, new { estado = 500, mensaje = "Error interno.", detalle = e.Message });
         }
     }
 
     // ------------------------------------------------------------
-    // GET /api/producto/{codigo}  →  obtener uno
+    // GET /api/persona/{codigo}  →  obtener una
     // ------------------------------------------------------------
-    // El {codigo} de la ruta llega como parámetro del método:
     [HttpGet("{codigo}")]
     public async Task<IActionResult> Obtener(string codigo)
     {
         try
         {
-            // Si existe → 200 con el Producto (el serializador lo vuelve
-            // JSON solo). Si no existe, el servicio LANZA la excepción y
-            // este método salta directo al catch del 404.
-            var producto = await _servicio.ObtenerAsync(codigo);
-            return Ok(producto);
+            var persona = await _servicio.ObtenerAsync(codigo);
+            return Ok(persona);
         }
         catch (ArgumentException e)
         {
@@ -108,7 +80,7 @@ public class ProductoController : ControllerBase
         }
         catch (NoEncontradoExcepcion e)
         {
-            return StatusCode(404, new { estado = 404, mensaje = "Producto no encontrado.", detalle = e.Message });
+            return StatusCode(404, new { estado = 404, mensaje = "Persona no encontrada.", detalle = e.Message });
         }
         catch (Exception e)
         {
@@ -117,30 +89,23 @@ public class ProductoController : ControllerBase
     }
 
     // ------------------------------------------------------------
-    // POST /api/producto  →  crear (body completo, con código)
+    // POST /api/persona  →  crear (body completo, con código)
     // ------------------------------------------------------------
-    // [FromBody] ProductoCrear body = ASP.NET toma el JSON, lo vuelca en
-    // la PETICIÓN del verbo y lo VALIDA contra sus anotaciones. Si algo no
-    // cumple, este método NI SE EJECUTA: Program.cs ya respondió 422 con
-    // la lista de errores. Aquí solo entra data limpia.
     [HttpPost]
-    public async Task<IActionResult> Crear([FromBody] ProductoCrear body)
+    public async Task<IActionResult> Crear([FromBody] PersonaCrear body)
     {
         try
         {
-            // El NEGOCIO construye el objeto del MODELO entidad: desde
-            // este punto el producto viaja tipado. Los "!" le dicen al
-            // compilador "confía: no es null" (lo garantizó [Required]).
-            var producto = new Producto
+            var persona = new Persona
             {
                 Codigo = body.Codigo!,
                 Nombre = body.Nombre!,
-                Stock = body.Stock!.Value,
-                Valorunitario = body.Valorunitario!.Value,
+                Email = body.Email!,
+                Telefono = body.Telefono!,
             };
 
-            await _servicio.CrearAsync(producto);
-            return Ok(new { estado = 200, mensaje = "Producto creado exitosamente." });
+            await _servicio.CrearAsync(persona);
+            return Ok(new { estado = 200, mensaje = "Persona creada exitosamente." });
         }
         catch (ConflictoExcepcion e)
         {
@@ -163,27 +128,22 @@ public class ProductoController : ControllerBase
     }
 
     // ------------------------------------------------------------
-    // PUT /api/producto/{codigo}  →  reemplazo COMPLETO
+    // PUT /api/persona/{codigo}  →  reemplazo COMPLETO
     // ------------------------------------------------------------
-    // La petición ProductoReemplazo exige TODOS los campos: un PUT con
-    // body parcial muere en 422 ANTES de llegar aquí — esa es la
-    // semántica de PUT, escrita en la petición.
     [HttpPut("{codigo}")]
-    public async Task<IActionResult> Reemplazar(string codigo, [FromBody] ProductoReemplazo body)
+    public async Task<IActionResult> Reemplazar(string codigo, [FromBody] PersonaReemplazo body)
     {
         try
         {
-            // Armar el diccionario columna→valor con los 3 campos (en
-            // PUT siempre vienen los 3 — la petición lo garantizó):
             var datos = new Dictionary<string, object>
             {
                 ["nombre"] = body.Nombre!,
-                ["stock"] = body.Stock!.Value,
-                ["valorunitario"] = body.Valorunitario!.Value,
+                ["email"] = body.Email!,
+                ["telefono"] = body.Telefono!,
             };
 
             var filas = await _servicio.ActualizarAsync(codigo, datos);
-            return Ok(new { estado = 200, mensaje = "Producto reemplazado exitosamente.", filasAfectadas = filas });
+            return Ok(new { estado = 200, mensaje = "Persona reemplazada exitosamente.", filasAfectadas = filas });
         }
         catch (ArgumentException e)
         {
@@ -191,7 +151,7 @@ public class ProductoController : ControllerBase
         }
         catch (NoEncontradoExcepcion e)
         {
-            return StatusCode(404, new { estado = 404, mensaje = "Producto no encontrado.", detalle = e.Message });
+            return StatusCode(404, new { estado = 404, mensaje = "Persona no encontrada.", detalle = e.Message });
         }
         catch (ConflictoExcepcion e)
         {
@@ -213,28 +173,21 @@ public class ProductoController : ControllerBase
     }
 
     // ------------------------------------------------------------
-    // PATCH /api/producto/{codigo}  →  actualización PARCIAL
+    // PATCH /api/persona/{codigo}  →  actualización PARCIAL
     // ------------------------------------------------------------
-    // ProductoActualizar no exige campos: valida SOLO los que llegaron.
-    // El MISMO body {"stock": 99} que en PUT da 422, aquí pasa — la
-    // diferencia entre PUT y PATCH queda escrita en las peticiones.
     [HttpPatch("{codigo}")]
-    public async Task<IActionResult> Actualizar(string codigo, [FromBody] ProductoActualizar body)
+    public async Task<IActionResult> Actualizar(string codigo, [FromBody] PersonaActualizar body)
     {
         try
         {
-            // Armar el diccionario SOLO con lo que vino (lo que quedó
-            // null en la petición = no fue enviado). Esta es la lista
-            // blanca: solo estas 3 columnas pueden viajar al SQL.
+            // La lista blanca: solo estas 3 columnas pueden viajar al SQL.
             var datos = new Dictionary<string, object>();
             if (body.Nombre != null) { datos["nombre"] = body.Nombre; }
-            if (body.Stock != null) { datos["stock"] = body.Stock.Value; }
-            if (body.Valorunitario != null) { datos["valorunitario"] = body.Valorunitario.Value; }
+            if (body.Email != null) { datos["email"] = body.Email; }
+            if (body.Telefono != null) { datos["telefono"] = body.Telefono; }
 
-            // El body vacío NO es 422: es una regla de negocio (400) que
-            // decide el servicio — forma vs negocio, cada cosa en su capa.
             var filas = await _servicio.ActualizarAsync(codigo, datos);
-            return Ok(new { estado = 200, mensaje = "Producto actualizado exitosamente.", filasAfectadas = filas });
+            return Ok(new { estado = 200, mensaje = "Persona actualizada exitosamente.", filasAfectadas = filas });
         }
         catch (ArgumentException e)
         {
@@ -242,7 +195,7 @@ public class ProductoController : ControllerBase
         }
         catch (NoEncontradoExcepcion e)
         {
-            return StatusCode(404, new { estado = 404, mensaje = "Producto no encontrado.", detalle = e.Message });
+            return StatusCode(404, new { estado = 404, mensaje = "Persona no encontrada.", detalle = e.Message });
         }
         catch (ConflictoExcepcion e)
         {
@@ -264,7 +217,7 @@ public class ProductoController : ControllerBase
     }
 
     // ------------------------------------------------------------
-    // DELETE /api/producto/{codigo}  →  eliminar
+    // DELETE /api/persona/{codigo}  →  eliminar
     // ------------------------------------------------------------
     [HttpDelete("{codigo}")]
     public async Task<IActionResult> Eliminar(string codigo)
@@ -272,7 +225,7 @@ public class ProductoController : ControllerBase
         try
         {
             var filas = await _servicio.EliminarAsync(codigo);
-            return Ok(new { estado = 200, mensaje = "Producto eliminado exitosamente.", filasEliminadas = filas });
+            return Ok(new { estado = 200, mensaje = "Persona eliminada exitosamente.", filasEliminadas = filas });
         }
         catch (ArgumentException e)
         {
@@ -280,7 +233,7 @@ public class ProductoController : ControllerBase
         }
         catch (NoEncontradoExcepcion e)
         {
-            return StatusCode(404, new { estado = 404, mensaje = "Producto no encontrado.", detalle = e.Message });
+            return StatusCode(404, new { estado = 404, mensaje = "Persona no encontrada.", detalle = e.Message });
         }
         catch (ConflictoExcepcion e)
         {
@@ -297,6 +250,8 @@ public class ProductoController : ControllerBase
         }
         catch (Exception e)
         {
+            // Aquí cae la LLAVE FORÁNEA: eliminar P001 (que es cliente)
+            // hace que la BD rechace el DELETE — integridad referencial:
             return StatusCode(500, new { estado = 500, mensaje = "Error interno.", detalle = e.Message });
         }
     }

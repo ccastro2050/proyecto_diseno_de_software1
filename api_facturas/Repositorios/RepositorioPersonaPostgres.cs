@@ -1,5 +1,5 @@
 // ============================================================
-// RepositorioProductoPostgres — la capa de DATOS de el producto.
+// RepositorioPersonaPostgres — la capa de DATOS de la persona.
 //
 // SQL escrito A MANO y SIEMPRE parametrizado; DAPPER como
 // micro-ejecutor: QueryAsync<T> mapea columna→propiedad por nombre
@@ -14,11 +14,11 @@ using Npgsql;
 
 namespace ApiFacturas.Repositorios;
 
-public class RepositorioProductoPostgres : IRepositorioProducto
+public class RepositorioPersonaPostgres : IRepositorioPersona
 {
     private readonly string _cadenaConexion;
 
-    public RepositorioProductoPostgres(string cadenaConexion)
+    public RepositorioPersonaPostgres(string cadenaConexion)
     {
         _cadenaConexion = cadenaConexion;
     }
@@ -27,33 +27,33 @@ public class RepositorioProductoPostgres : IRepositorioProducto
     /// el "await using" del llamador la libera aunque haya error.</summary>
     private NpgsqlConnection CrearConexion() => new(_cadenaConexion);
 
-    public async Task<List<Producto>> ObtenerTodosAsync(int limite)
+    public async Task<List<Persona>> ObtenerTodasAsync(int limite)
     {
-        const string sql = @"SELECT codigo, nombre, stock, valorunitario
-                             FROM producto ORDER BY codigo LIMIT @limite";
+        const string sql = @"SELECT codigo, nombre, email, telefono
+                             FROM persona ORDER BY codigo LIMIT @limite";
         await using var conexion = CrearConexion();
-        var filas = await conexion.QueryAsync<Producto>(sql, new { limite });
+        var filas = await conexion.QueryAsync<Persona>(sql, new { limite });
         return filas.ToList();
     }
 
-    public async Task<Producto?> ObtenerPorCodigoAsync(string codigo)
+    public async Task<Persona?> ObtenerPorCodigoAsync(string codigo)
     {
-        const string sql = @"SELECT codigo, nombre, stock, valorunitario
-                             FROM producto WHERE codigo = @codigo";
+        const string sql = @"SELECT codigo, nombre, email, telefono
+                             FROM persona WHERE codigo = @codigo";
         await using var conexion = CrearConexion();
         // Una fila → el modelo; cero filas → null (el SERVICIO decide qué
         // significa ese null — aquí solo hay hechos):
-        return await conexion.QueryFirstOrDefaultAsync<Producto>(sql, new { codigo });
+        return await conexion.QueryFirstOrDefaultAsync<Persona>(sql, new { codigo });
     }
 
-    public async Task CrearAsync(Producto producto)
+    public async Task CrearAsync(Persona persona)
     {
-        const string sql = @"INSERT INTO producto (codigo, nombre, stock, valorunitario)
-                             VALUES (@Codigo, @Nombre, @Stock, @Valorunitario)";
+        const string sql = @"INSERT INTO persona (codigo, nombre, email, telefono)
+                             VALUES (@Codigo, @Nombre, @Email, @Telefono)";
         await using var conexion = CrearConexion();
         // El OBJETO del modelo como fuente de parámetros (@Propiedad):
         await ErroresPostgres.TraducirAsync(
-            () => conexion.ExecuteAsync(sql, producto));
+            () => conexion.ExecuteAsync(sql, persona));
     }
 
     public async Task<int> ActualizarAsync(string codigo, Dictionary<string, object> datos)
@@ -62,9 +62,9 @@ public class RepositorioProductoPostgres : IRepositorioProducto
         // PATCH un subconjunto). Los NOMBRES salen de las PETICIONES (lista
         // blanca) — jamás del cliente; los VALORES van parametrizados:
         var asignaciones = string.Join(", ", datos.Keys.Select(c => $"{c} = @{c}"));
-        var sql = $"UPDATE producto SET {asignaciones} WHERE codigo = @codigo_clave";
+        var sql = $"UPDATE persona SET {asignaciones} WHERE codigo = @pk_clave";
         var parametros = new DynamicParameters(datos);
-        parametros.Add("codigo_clave", codigo);
+        parametros.Add("pk_clave", codigo);
         await using var conexion = CrearConexion();
         // ExecuteAsync devuelve las FILAS AFECTADAS (0 = no existía):
         return await ErroresPostgres.TraducirAsync(
@@ -74,7 +74,7 @@ public class RepositorioProductoPostgres : IRepositorioProducto
     public async Task<int> EliminarAsync(string codigo)
     {
         // Si otras tablas lo referencian, la FK del motor rechaza → 500:
-        const string sql = "DELETE FROM producto WHERE codigo = @codigo";
+        const string sql = "DELETE FROM persona WHERE codigo = @codigo";
         await using var conexion = CrearConexion();
         return await ErroresPostgres.TraducirAsync(
             () => conexion.ExecuteAsync(sql, new { codigo }));
