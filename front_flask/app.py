@@ -22,6 +22,15 @@ app.secret_key = os.environ.get("CLAVE_SESION", "clave-solo-para-desarrollo")
 app.register_blueprint(bp_entidades)
 
 
+# Las tarjetas del inicio que NO salen del registro, porque no son
+# un CRUD de campos: la factura se emite y se anula, el usuario con sus
+# roles viaja con casillas, y el tablero no tiene tabla.
+# En esta version la lista esta VACIA, y es correcto: la factura y los
+# usuarios con sus roles llegan en la v2, y el tablero en la v4. Aqui todas
+# las interfaces salen del registro.
+TARJETAS_SUELTAS = []
+
+
 @app.context_processor
 def menu():
     """El menu, con TODAS las entidades de esta version.
@@ -29,7 +38,7 @@ def menu():
     En la v3 este mismo metodo filtrara por permiso. Hoy no hay a quien
     preguntarle: no hay sesion.
     """
-    return {"menu_entidades": ENTIDADES, "hay_sesion": False}
+    return {"menu_entidades": ENTIDADES, "hay_sesion": False, "tarjetas_sueltas": TARJETAS_SUELTAS}
 
 
 @app.route("/")
