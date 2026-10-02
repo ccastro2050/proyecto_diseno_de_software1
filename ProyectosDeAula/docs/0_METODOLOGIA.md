@@ -89,7 +89,7 @@ docs/spec_kit/
   tarjetas con el formato de clase (número, usuario, prioridad, riesgo,
   puntos, descripción "Yo… como… quiero… para…", observaciones con
   trazabilidad y **criterios de aceptación numerados**). El ejemplo:
-  [las historias de la v1 del curso](https://github.com/ccastro2050/proyecto_diseno_de_software1/blob/main/docs/spec_kit/versiones/v1_producto_postgres/HISTORIAS_DE_USUARIO.md).
+  [las historias de la v1 del curso](https://github.com/ccastro2050/proyecto_diseno_de_software1/blob/main/docs/spec_kit/versiones/v1_sin_fk/HISTORIAS_DE_USUARIO.md).
 - \* La `GUIA_IA<N>.md` es opcional pero recomendada: si construyen con
   IA, escriban el prompt y las reglas como en las guías del curso.
 
