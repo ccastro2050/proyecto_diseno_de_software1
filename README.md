@@ -144,17 +144,17 @@ la base de datos, la API y la **interfaz gráfica**.
 
 | Dirección | En el menú | De la |
 |---|---|---|
-| `/e/producto` | Productos | v1 |
-| `/e/empresa` | Empresas | v1 |
-| `/e/persona` | Personas | v1 |
-| `/e/rol` | Roles | v1 |
-| `/e/ruta` | Rutas | v1 |
-| `/e/usuario` | Usuarios | v1 |
+| `/productos` | Productos | v1 |
+| `/empresas` | Empresas | v1 |
+| `/personas` | Personas | v1 |
+| `/roles` | Roles | v1 |
+| `/rutas` | Rutas | v1 |
+| `/usuarios` | Usuarios | v1 |
 
 > **El menú nombra RECURSOS del dominio, no tablas ni rutas de la API.**
 > Dice «Facturas», no `/api/factura`.
 >
-> Y las direcciones son **genéricas** —`/e/producto`, `/e/empresa`—, al
+> Y las direcciones son **genéricas** —`/productos`, `/empresas`—, al
 > contrario que la API, donde cada recurso tiene su ruta propia. No es una
 > contradicción: la API expone un **contrato** que otros leen, y un
 > `/api/{tabla}` lo dejaría en blanco. Esto no expone nada: es la
