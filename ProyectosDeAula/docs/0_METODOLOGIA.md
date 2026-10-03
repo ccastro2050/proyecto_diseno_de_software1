@@ -60,9 +60,9 @@ La **fecha exacta** de su grupo la fija el profesor en clase (anótela).
 |---|---|---|---|
 | **Evaluación individual teórico-práctica** | Segunda semana de **septiembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** individual |
 | **Entrega versión 1** | Penúltima semana de **septiembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% sustentación individual (incluidos los commits) + 10% equipo |
-| **Entrega versión 2** | Penúltima semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
-| **Entrega versión 3** | Primera semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
-| **Entrega versión 4** | Penúltima semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
+| **Entrega versión 2** | **Segunda** semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
+| **Entrega versión 3** | **Última** semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
+| **Entrega versión 4** | **Segunda** semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
 
 > **"Incluidos los commits"**: en la sustentación individual cada
 > estudiante responde por SU rama, y sus commits lo respaldan. Una rama
