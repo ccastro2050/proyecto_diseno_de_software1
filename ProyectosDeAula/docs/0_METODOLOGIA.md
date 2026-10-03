@@ -1,10 +1,13 @@
-# Proyecto de aula — Metodología de trabajo (SDD, DISEÑO, versiones, Git y secretos)
+# Proyecto de aula — Metodología de trabajo (SDD, versiones, Git y secretos)
 
 > **Léame primero.** Este documento define CÓMO se trabaja el proyecto de
-> aula del curso **Diseño de Software (USB Medellín)** — la misma
-> metodología del ejemplo que construimos en clase. Lo QUE construye cada
-> equipo lo define el documento de su módulo (lo entrega el profesor en
-> clase).
+> aula — la misma metodología del ejemplo que construimos en clase. Lo QUE
+> construye cada equipo está en el documento de su módulo:
+> [Gestión Profesoral](modulo_gestion_profesoral.md) ·
+> [Investigación](modulo_investigacion.md) ·
+> [Innovación Curricular](modulo_innovacion_curricular.md) ·
+> [Mapa de Conocimiento](modulo_mapa_conocimiento.md) ·
+> [Proyecto Completo](proyecto_completo.md).
 
 ---
 
@@ -16,37 +19,41 @@ exactamente como el ejemplo del curso:
 
 | Ejemplo de clase | Qué demuestra |
 |---|---|
-| [proyecto_diseno_de_software1](https://github.com/ccastro2050/proyecto_diseno_de_software1) | La v1: una rebanada vertical con capas, especificada Y DIBUJADA antes de codificar (vea sus diagramas Mermaid) |
-| proyecto_diseno_de_software2, 3… | Llegarán durante el semestre — la ruta continúa igual |
+| [proyecto_aplicacion_y_servicios_web1](https://github.com/ccastro2050/proyecto_aplicacion_y_servicios_web1) | La v1: una rebanada vertical con capas, especificada antes de codificar |
+| [proyecto_aplicacion_y_servicios_web2](https://github.com/ccastro2050/proyecto_aplicacion_y_servicios_web2) | La v2: crecer SOBRE la v1 sin romperla (regresión + spec del delta) |
+| proyecto_aplicacion_y_servicios_web3 y …web4 | Llegarán durante el semestre — la ruta continúa igual |
 
 Lo que se replica del ejemplo **es el MÉTODO, no el contenido**: la
 constitución permanente, una carpeta de specs por versión con sus
-documentos, los criterios de aceptación como definición de "terminado",
-el cierre con tag, la regla de que una versión cerrada no se reabre —
-**y, en ESTE curso, el diseño dibujado dentro de la spec (sección 4)**.
+documentos numerados, su lista de chequeo y su guía, los criterios de
+aceptación como definición de
+"terminado", el cierre con tag, y la regla de que una versión cerrada no
+se reabre. Estudien el `docs/spec_kit/` de esos repos: ese es el molde.
 
-### 1.1 Las reglas de oro
+### 1.1 Las reglas de oro (del mapa de versiones del curso)
 
 1. **La especificación manda**: no se programa nada que la spec de la
    versión en curso no pida.
 2. **No se anticipa**: nada de una versión futura se construye "de una
-   vez" (YAGNI con dirección: las interfaces sí, la fábrica cuando
-   llegue el segundo motor).
+   vez" (ni JWT en la v1, ni dashboard en la v2).
 3. **Una versión está TERMINADA** solo cuando pasan sus criterios de
    aceptación → commit + **tag `vN`** en main → solo entonces se escribe
    la spec de la siguiente.
 4. **Una versión cerrada no se reabre**: los ajustes van en la siguiente.
 5. **Regresión obligatoria**: al cerrar la vN, los criterios de TODAS las
-   versiones anteriores deben seguir pasando.
+   versiones anteriores deben seguir pasando (las versiones son
+   acumulativas).
 
 ## 2. Las 4 versiones del proyecto de aula
+
+Las antiguas "entregas" ahora son **versiones** con spec kit propio:
 
 | Versión | Qué agrega (acumulativo) | Cierre |
 |---|---|---|
 | **v1** | CRUD de las **tablas sin FK** del módulo — API REST + Frontend funcionando | Criterios en verde + tag `v1` |
 | **v2** | CRUD de **TODAS las tablas** (FK con listas desplegables cargadas desde la API; tablas puente) | Regresión v1 + criterios + tag `v2` |
 | **v3** | **JWT + sesiones + control de acceso por roles** + CRUD de usuario/rol/rol_usuario (solo admin) | Regresión v1-v2 + criterios + tag `v3` |
-| **v4** | Aplicativo completo: **10 consultas multitabla** (4+ tablas c/u), **dashboard**, **imagen corporativa con su manual de marca**, responsive/PWA y **publicación** en servidor gratuito | Regresión total + criterios + tag `v4` |
+| **v4** | Aplicativo completo: **10 consultas multitabla** (4+ tablas c/u), **dashboard**, **imagen corporativa con su manual de marca**, páginas corporativas, responsive/PWA y **publicación** en servidor gratuito | Regresión total + criterios + tag `v4` |
 
 > **El detalle de la versión 2 —procedimientos almacenados, disparadores,
 > maestro-detalle y claves foráneas— está en
@@ -54,20 +61,22 @@ el cierre con tag, la regla de que una versión cerrada no se reabre —
 
 ### 2.1 Calendario y evaluación del semestre (100%)
 
-La **fecha exacta** de su grupo la fija el profesor en clase (anótela).
+Las fechas generales aplican a todos los grupos; la **fecha exacta** de su
+grupo la fija el profesor en clase (anótela en el espacio en blanco).
 
 | Momento | Fecha general | Fecha exacta (su grupo) | Evaluación |
 |---|---|---|---|
 | **Evaluación individual teórico-práctica** | Segunda semana de **septiembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** individual |
-| **Entrega versión 1** | Penúltima semana de **septiembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% sustentación individual (incluidos los commits) + 10% equipo |
-| **Entrega versión 2** | **Segunda** semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
-| **Entrega versión 3** | **Última** semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
-| **Entrega versión 4** | **Segunda** semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
+| **Entrega versión 1** | Última semana de **septiembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% sustentación individual (incluidos los commits) + 10% entrega en equipo |
+| **Entrega versión 2** | **Segunda** semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% sustentación individual (incluidos los commits) + 10% entrega en equipo |
+| **Entrega versión 3** | **Última** semana de **octubre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% sustentación individual (incluidos los commits) + 10% entrega en equipo |
+| **Entrega versión 4** | **Segunda** semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% sustentación individual (incluidos los commits) + 10% entrega en equipo |
 
-> **"Incluidos los commits"**: en la sustentación individual cada
-> estudiante responde por SU rama, y sus commits lo respaldan. Una rama
-> con un solo commit gigante la noche anterior es una sustentación sin
-> evidencia.
+> **"Incluidos los commits"** significa que en la sustentación individual
+> cada estudiante responde por SU rama: qué hizo, por qué, y sus commits
+> lo respaldan (frecuentes, descriptivos, propios). Una rama sin commits —
+> o con un solo commit gigante la noche anterior — es una sustentación
+> sin evidencia.
 
 ## 3. El spec kit que cada equipo ESCRIBE (por versión)
 
@@ -84,22 +93,46 @@ docs/spec_kit/
     ├── v1_<nombre>/             ← 2_spec.md · 3_plan.md · 4_research.md ·
     │                              5_data_model.md · 6_contracts.md ·
     │                              7_quickstart.md · 8_tasks.md ·
-    │                              HISTORIAS_DE_USUARIO.md · GUIA_IA1.md*
+    │                              9_checklist.md · GUIA_IA1.md*
     ├── v2_<nombre>/             ← los mismos, para el delta de la v2
     └── …
 ```
 
-- **`HISTORIAS_DE_USUARIO.md` es obligatoria en este curso**: las
-  tarjetas con el formato de clase (número, usuario, prioridad, riesgo,
-  puntos, descripción "Yo… como… quiero… para…", observaciones con
-  trazabilidad y **criterios de aceptación numerados**). El ejemplo:
-  [las historias de la v1 del curso](https://github.com/ccastro2050/proyecto_diseno_de_software1/blob/main/docs/spec_kit/versiones/v1_sin_fk/HISTORIAS_DE_USUARIO.md).
-- \* La `GUIA_IA<N>.md` es opcional pero recomendada: si construyen con
-  IA, escriban el prompt y las reglas como en las guías del curso.
+\* La `GUIA_IA<N>.md` es opcional pero recomendada: si van a construir con
+ayuda de IA, escriban el prompt y las reglas COMO en las guías del curso —
+la IA sigue la spec, no improvisa. Copien la estructura de los repos de
+clase y adáptenla; eso ES el ejercicio.
 
-**La spec es parte de la nota**: se evalúa que exista, esté completa,
-**coincida con lo construido** — y que traiga los diagramas de la
-sección 4.
+**La spec es parte de la nota**: en cada versión se evalúa que el spec kit
+exista, esté completo y **coincida con lo construido** (si el código hace
+algo que la spec no dice, uno de los dos está mal).
+
+### 3.1 Las tres compuertas
+
+Escribir los documentos no basta: lo que separa un spec kit de una carpeta
+con archivos son **tres puntos donde el equipo se detiene, revisa y no
+sigue hasta que quede en verde**. Están explicados con ejemplos en el
+[SDD_SPECKIT.md del ejemplo de clase](https://github.com/ccastro2050/proyecto_aplicacion_y_servicios_web1/blob/main/docs/SDD_SPECKIT.md).
+
+| | Dónde vive | Qué pregunta | Si falla |
+|---|---|---|---|
+| **1. Clarificaciones** | Una sección dentro de `2_spec.md` | ¿Hay algo que dos personas del equipo leerían distinto? | Se decide en equipo (o se le pregunta al profesor) y la respuesta se escribe DENTRO de la spec — no se resuelve improvisando en el código |
+| **2. Chequeo de constitución** | La última sección de `3_plan.md` | ¿El plan respeta la constitución del equipo, artículo por artículo? | O se corrige el plan, o se enmienda la constitución. Nunca "se deja pasar por esta vez" |
+| **3. Lista de requisitos** | `9_checklist.md` de la versión | ¿Cada requisito es medible, único y verificable? | Se vuelve a la spec. **No se escribe código con la lista en rojo** |
+
+> **La tercera es la mejor actividad de equipo del método:** antes de
+> repartir el trabajo, cada quien revisa con la lista la parte de la spec
+> que escribió otro. Las ambigüedades que uno no ve, el otro las tropieza
+> de una — y salen antes de costar código. Las casillas las marca una
+> persona: una IA puede ayudar a evaluar, pero no puede auto-aprobarse.
+
+Y al trabajar con una IA: **la ambigüedad se MARCA, no se rellena.**
+Cuando algo no está definido, se escribe
+`[NECESITA ACLARACIÓN: …]` en la spec y se resuelve en la compuerta 1,
+antes de planear. Si una IA les dice "asumo que…" o "por defecto voy
+a…", **párenla**: eso es una ambigüedad de la especificación disfrazada de
+detalle de implementación, y la respuesta va a la spec — no solo al chat.
+El chat se cierra; la spec queda.
 
 ## 4. EL SELLO DE ESTE CURSO: los diagramas Mermaid obligatorios
 
@@ -142,6 +175,8 @@ cada diagrama exigido aquí existe allá, con su guía de lectura.
 
 ## 5. Los dos repositorios (y las reglas de GitHub)
 
+El sistema son **DOS proyectos separados**, cada uno con su repositorio:
+
 | Repositorio | Qué es | Regla de oro |
 |---|---|---|
 | `<equipo>-api` | El backend: REST + JSON, conecta a la BD | NO genera HTML |
@@ -153,21 +188,23 @@ cada diagrama exigido aquí existe allá, con su guía de lectura.
 2. **Invitar al profesor** como colaborador desde el primer día:
    *Settings → Collaborators → Add people* → **`ccastro2050`**.
    Sin acceso del profesor, la entrega no existe.
-3. El spec kit (con sus diagramas) vive en el repo de la API.
+3. El spec kit vive en el repo de la API (`docs/spec_kit/`).
 
 ### 5.1 El flujo de ramas (obligatorio desde la v1)
 
 - **NADIE trabaja en `main`. Nunca.** Ni un commit directo.
-- **Cada estudiante tiene SU rama** (`rama-mariana`, `rama-jorge`) y
-  trabaja siempre ahí.
-- El equipo designa **UN encargado del main** (el integrador), que
-  también tiene su propia rama — su rol extra es ser el único que hace
-  merge.
-- Todo llega a `main` por **Pull Request** revisado por el encargado
-  (¿compila? ¿cumple la spec? ¿los criterios siguen pasando?).
-- El cierre de cada versión es un **tag `vN` sobre main**.
-- Commits pequeños, frecuentes y descriptivos en español — "avances" no
-  es un mensaje.
+- **Cada estudiante tiene SU rama** (nómbrela con su nombre:
+  `rama-mariana`, `rama-jorge`) y trabaja siempre ahí.
+- El equipo designa **UN encargado del main** (el integrador). Ese
+  estudiante TAMBIÉN tiene su propia rama para su trabajo — su rol extra
+  es ser el único que integra.
+- Todo llega a `main` por **Pull Request**: el autor abre el PR desde su
+  rama, el encargado del main lo revisa (¿compila? ¿cumple la spec? ¿los
+  criterios siguen pasando?) y SOLO el encargado hace el merge.
+- El cierre de cada versión es un **tag `vN` sobre main** (lo pone el
+  encargado cuando los criterios de aceptación pasan).
+- Commits pequeños, frecuentes y con mensajes descriptivos en español —
+  "avances" no es un mensaje.
 
 ```
 rama-mariana ──●──●──●──╮ PR
@@ -180,23 +217,35 @@ main         ────────●──●──●── tag v1 ──�
 ## 6. Secretos: variables de entorno, SIEMPRE
 
 **Regla innegociable:** ningún secreto va escrito en el código ni en
-archivos versionados (cadena de conexión, secreto del JWT, claves de
-servicios externos).
+archivos versionados. Son secretos: la **cadena de conexión** a la BD (y
+su contraseña), el **secreto de firma del JWT**, y cualquier clave de
+servicios externos.
 
-> **Aclaración del profesor:** en los repositorios del curso las
-> credenciales están a la vista **a propósito y solo por didáctica** (es
-> un laboratorio que corre en su PC). El proyecto de aula se publica en
-> un servidor real (v4): ahí la regla aplica completa desde la v1.
+> **Aclaración importante del profesor:** en los repositorios del curso
+> (web1, web2…) las credenciales están escritas a la vista **a propósito y
+> solo por didáctica**: es un entorno de juguete que corre en su PC y
+> jamás se despliega. El proyecto de aula es distinto — **se publica en un
+> servidor real (v4)**, así que ahí la regla aplica completa desde la v1.
 
-1. El código lee los secretos de **variables de entorno** (`.env` local,
-   `environment:` en compose, panel del servidor en la v4).
-2. **`.env` NUNCA se sube** — al `.gitignore` desde el primer commit.
-3. El repo SÍ incluye **`.env.example`** con valores de mentira.
-4. **Si un secreto se subió por error**: rotarlo de inmediato — borrarlo
-   del último commit no basta, quedó en la historia.
+Cómo cumplirla:
 
-En la rúbrica: un secreto quemado **anula el criterio de seguridad de la
-versión**.
+1. El código lee los secretos de **variables de entorno**
+   (`DB_CONNECTION`, `JWT_SECRET`, …) con el mecanismo de su stack
+   (variables del sistema, `.env` con la librería del lenguaje,
+   `environment:` en compose, configuración del servidor de publicación).
+2. El archivo **`.env` NUNCA se sube a git** — va en el `.gitignore`
+   desde el primer commit.
+3. El repo SÍ incluye un **`.env.example`**: las mismas variables con
+   valores de mentira, para que cualquier integrante (o el profesor) sepa
+   qué configurar.
+4. En el servidor gratuito de la v4, los secretos se configuran en el
+   panel de variables de entorno del servicio — jamás en el código
+   desplegado.
+5. **Si un secreto se subió por error**: cambiarlo (rotarlo) de inmediato;
+   borrarlo del último commit no basta — quedó en la historia.
+
+En la rúbrica: un secreto quemado en el código **anula el criterio de
+seguridad de la versión**.
 
 ## 7. Reglas técnicas del sistema (aplican a todos los módulos)
 
@@ -214,7 +263,7 @@ versión**.
   El borrado es **lógico** (`activo = 0` / `activo = FALSE`) y los listados
   filtran los inactivos.
 
-### 6.1 Por qué el proyecto pide endpoints específicos y no una API genérica
+### 7.1 Por qué el proyecto pide endpoints específicos y no una API genérica
 
 Al ver ocho o diez tablas parecidas, la idea aparece sola: **una sola ruta con
 el nombre de la tabla como parámetro** —`GET /api/{tabla}`, `POST
@@ -271,22 +320,32 @@ cobra la ventaja de ninguna.
 > con nombre. Se rehízo con endpoints específicos.
 >
 > Se cuenta aquí para que usted no tenga que pagar la misma tarde.
-- **Separación estricta**: si el frontend toca la BD, la arquitectura
-  está rota (criterio de rúbrica).
+- **Separación estricta**: el frontend consume la API; si el frontend toca
+  la BD, la arquitectura está rota (criterio de rúbrica).
 - **v3 — seguridad**: `POST /api/login` entrega el JWT; middleware de
-  autenticación y autorización por roles; contraseñas **hasheadas**
-  (bcrypt o equivalente), nunca en texto plano.
-- **v4 — cierre**: 10 consultas multitabla (4+ tablas c/u) con
-  dashboard; páginas corporativas con identidad; responsive/PWA;
-  publicación en servidor gratuito aprobado por el profesor.
+  autenticación y de autorización por roles; el frontend guarda el token,
+  lo envía en `Authorization: Bearer`, arma el menú según roles, y solo el
+  administrador ve el CRUD de usuarios/roles. Contraseñas de usuarios
+  **hasheadas** (bcrypt o equivalente), nunca en texto plano.
+- **v4 — cierre**: 10 consultas multitabla (mínimo 4 tablas cada una)
+  expuestas como endpoints y presentadas en el dashboard con gráficos;
+  páginas corporativas (Home, Productos/Servicios, Soporte, Contacto,
+  Sobre Nosotros) con imagen corporativa de la empresa hipotética **respaldada
+  por un manual de marca** (ver abajo); diseño
+  responsive (PWA si es posible); publicación en servidor gratuito según
+  el stack (las opciones están en el documento de su módulo original y
+  las valida el profesor).
+- **Datos iniciales**: las tablas de catálogo se cargan con los datos de
+  referencia del Excel del `Mapa_conocimiento/` (los conteos por tabla
+  están en el documento del módulo).
 - **Stack**: cada equipo elige su lenguaje/framework con aprobación del
-  profesor — la metodología, los contratos y LOS DIAGRAMAS son los
-  mismos en cualquier stack (esa es la gracia).
+  profesor — la metodología y los contratos son los mismos en cualquier
+  stack (esa es la gracia).
 
 ### El manual de marca de la v4
 
 La imagen corporativa no se improvisa el último día: **se escribe antes en un
-manual, y después la pantalla lo cumple.** Eso es lo que se evalúa.
+manual, y después la interfaz gráfica lo cumple.** Eso es lo que se evalúa.
 
 **El equipo escoge:**
 
@@ -298,7 +357,7 @@ manual, y después la pantalla lo cumple.** Eso es lo que se evalúa.
 **Es libre.** Lo que **no** es libre es que exista:
 
 > **Tiene que haber un manual de marca en el repositorio, como `.pdf` y/o
-> `.md`.** Sin él no hay contra qué comparar la pantalla, y el criterio de
+> `.md`.** Sin él no hay contra qué comparar la interfaz gráfica, y el criterio de
 > imagen corporativa no se puede calificar.
 
 **Lo mínimo que ese manual debe fijar:**
@@ -322,23 +381,27 @@ restricción, y no una preferencia de quien programa.
 
 ## 8. Rúbrica de evaluación
 
-Cada criterio se califica en una de dos franjas: **Cumple (3.0 – 5.0,
-según calidad)** o **No cumple (0 – 2.9)**.
+Aplica en cada versión; el profesor asigna el peso por criterio. Cada
+criterio se califica en una de dos franjas: **Cumple (de 3.0 a 5.0**,
+según la calidad de lo entregado**)** o **No cumple (de 0 a 2.9)**.
 
 | Criterio | Cumple (3.0 – 5.0) | No cumple (0 – 2.9) |
 |---|---|---|
-| **Especificación (SDD)** | Spec kit completo ANTES del código; criterios verificables; coincide con lo construido | No hay spec, se escribió después, o contradice lo construido |
-| **DISEÑO (diagramas del spec kit)** | Los diagramas obligatorios de la sección 4 presentes, en Mermaid embebido, con guía de lectura, y COINCIDEN con el código (la secuencia del 404 es la del código) | Diagramas faltantes, pegados como imagen, sin guía, o en desacuerdo con lo construido |
-| **Historias de usuario** | Tarjetas completas con criterios de aceptación verificables y trazabilidad a la spec | Sin historias, sin criterios, o desconectadas de la spec |
-| **Funcionalidad de la API** | Endpoints de la versión con JSON y códigos correctos | Endpoints caídos o sin JSON |
-| **Funcionalidad del Frontend** | Consume la API y es usable | No funciona o va directo a la BD |
+| **Especificación (SDD)** | Spec kit de la versión completo ANTES del código, **con sus tres compuertas pasadas**: ningún `[NECESITA ACLARACIÓN]` pendiente, chequeo de constitución hecho y `9_checklist.md` firmado; criterios de aceptación verificables; lo construido coincide con la spec | No hay spec, se escribió después "para cumplir", contradice lo construido, o el `9_checklist.md` está sin pasar |
+| **Funcionalidad de la API** | Los endpoints de la versión funcionan con JSON y códigos correctos | Endpoints caídos o sin JSON |
+| **Funcionalidad del Frontend** | Las interfaces consumen la API y son usables | No funcionan o van directo a la BD |
 | **Separación API/Front** | El front jamás toca la BD | No hay separación |
-| **Seguridad (v3+) y secretos (todas)** | JWT + roles; contraseñas hasheadas; cero secretos en el código; `.env.example` presente | Sin autenticación o secretos quemados |
-| **Borrado lógico** | En las tablas de la versión, inactivos filtrados | Borrado físico |
-| **Git y GitHub** | Repos privados con el profesor; cada uno en su rama; TODO por PR; solo el encargado hace merge; tags; commits descriptivos | Commits a main, repo público, o "un solo commit con todo" |
-| **Dashboard y consultas (v4)** | 10 consultas de 4+ tablas con gráficos | Menos, o sin dashboard |
-| **Publicación (v4)** | Publicado y funcional, secretos en el panel del servidor | No publicado o secretos expuestos |
+| **Seguridad (v3+) y secretos (todas)** | JWT + roles funcionando; contraseñas hasheadas; **cero secretos en el código**, `.env.example` presente | Sin autenticación, contraseñas o secretos quemados/en texto plano |
+| **Borrado lógico** | En las tablas de la versión, con inactivos filtrados | Borrado físico |
+| **Git y GitHub** | Repos privados con el profesor invitado; cada estudiante en su rama; TODO por PR; solo el encargado hace merge; tags v1…vN; commits descriptivos | Commits directos a main, repo público o sin el profesor, "un solo commit con todo" |
+| **Dashboard y consultas (v4)** | 10 consultas de 4+ tablas con gráficos claros | Menos de 10 consultas, consultas de menos de 4 tablas, o sin dashboard |
+| **Imagen corporativa y responsive (v4)** | **Existe un manual de marca** —propio o el del ejemplo— y la interfaz gráfica lo cumple: los colores y las tipografías salen de él, no de un gusto; todo responsive | No hay manual, o lo hay y la interfaz gráfica no lo respeta, o no es responsive |
+| **Publicación (v4)** | Publicado, funcional, con secretos en variables de entorno del servidor | No publicado o con secretos expuestos |
+
+Dentro de la franja "Cumple", la nota (3.0 a 5.0) refleja la calidad:
+completitud, solidez ante errores, claridad del código y de la spec, y la
+sustentación individual.
 
 **Entregar en cada versión:** enlaces a los 2 repos (con el tag `vN`
-puesto) + evidencia del quickstart pasando. En la v4, además: URL del
-sitio publicado.
+puesto) + evidencia del quickstart de su spec pasando. En la v4, además:
+URL del sitio publicado.
