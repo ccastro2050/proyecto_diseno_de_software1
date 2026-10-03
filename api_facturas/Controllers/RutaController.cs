@@ -69,19 +69,6 @@ public class RutaController : ControllerBase
             await _servicio.CrearAsync(entidad);
             return Ok(new { estado = 200, mensaje = "Ruta creada exitosamente." });
         }
-        catch (ConflictoExcepcion e)
-        {
-            // 409, y NO 422: el dato tiene la forma correcta -lo paso la
-            // validacion de la peticion- y lo que se rompe es el ESTADO de la
-            // base: la clave foranea apunta a una fila que no existe, la clave
-            // ya esta usada, o hay otra fila que depende de esta.
-            return StatusCode(409, new
-            {
-                estado = 409,
-                mensaje = "La operacion choca con los datos que ya existen.",
-                detalle = e.Message,
-            });
-        }
         catch (Exception e)
         {
             // PK duplicada o FK inexistente: la BD rechaza → 500 con detalle:
@@ -110,19 +97,6 @@ public class RutaController : ControllerBase
         {
             return StatusCode(404, new { estado = 404, mensaje = "Ruta no encontrada.", detalle = e.Message });
         }
-        catch (ConflictoExcepcion e)
-        {
-            // 409, y NO 422: el dato tiene la forma correcta -lo paso la
-            // validacion de la peticion- y lo que se rompe es el ESTADO de la
-            // base: la clave foranea apunta a una fila que no existe, la clave
-            // ya esta usada, o hay otra fila que depende de esta.
-            return StatusCode(409, new
-            {
-                estado = 409,
-                mensaje = "La operacion choca con los datos que ya existen.",
-                detalle = e.Message,
-            });
-        }
         catch (Exception e)
         {
             return StatusCode(500, new { estado = 500, mensaje = "Error interno.", detalle = e.Message });
@@ -148,19 +122,6 @@ public class RutaController : ControllerBase
         {
             return StatusCode(404, new { estado = 404, mensaje = "Ruta no encontrada.", detalle = e.Message });
         }
-        catch (ConflictoExcepcion e)
-        {
-            // 409, y NO 422: el dato tiene la forma correcta -lo paso la
-            // validacion de la peticion- y lo que se rompe es el ESTADO de la
-            // base: la clave foranea apunta a una fila que no existe, la clave
-            // ya esta usada, o hay otra fila que depende de esta.
-            return StatusCode(409, new
-            {
-                estado = 409,
-                mensaje = "La operacion choca con los datos que ya existen.",
-                detalle = e.Message,
-            });
-        }
         catch (Exception e)
         {
             return StatusCode(500, new { estado = 500, mensaje = "Error interno.", detalle = e.Message });
@@ -182,19 +143,6 @@ public class RutaController : ControllerBase
         catch (NoEncontradoExcepcion e)
         {
             return StatusCode(404, new { estado = 404, mensaje = "Ruta no encontrada.", detalle = e.Message });
-        }
-        catch (ConflictoExcepcion e)
-        {
-            // 409, y NO 422: el dato tiene la forma correcta -lo paso la
-            // validacion de la peticion- y lo que se rompe es el ESTADO de la
-            // base: la clave foranea apunta a una fila que no existe, la clave
-            // ya esta usada, o hay otra fila que depende de esta.
-            return StatusCode(409, new
-            {
-                estado = 409,
-                mensaje = "La operacion choca con los datos que ya existen.",
-                detalle = e.Message,
-            });
         }
         catch (Exception e)
         {
