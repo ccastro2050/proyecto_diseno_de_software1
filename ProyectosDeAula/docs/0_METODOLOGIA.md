@@ -48,6 +48,10 @@ el cierre con tag, la regla de que una versión cerrada no se reabre —
 | **v3** | **JWT + sesiones + control de acceso por roles** + CRUD de usuario/rol/rol_usuario (solo admin) | Regresión v1-v2 + criterios + tag `v3` |
 | **v4** | Aplicativo completo: **10 consultas multitabla** (4+ tablas c/u), **dashboard**, **imagen corporativa con su manual de marca**, responsive/PWA y **publicación** en servidor gratuito | Regresión total + criterios + tag `v4` |
 
+> **El detalle de la versión 2 —procedimientos almacenados, disparadores,
+> maestro-detalle y claves foráneas— está en
+> [VERSION_2.md](VERSION_2.md).** Léalo antes de empezarla.
+
 ### 2.1 Calendario y evaluación del semestre (100%)
 
 La **fecha exacta** de su grupo la fija el profesor en clase (anótela).
