@@ -64,10 +64,6 @@ La **fecha exacta** de su grupo la fija el profesor en clase (anótela).
 | **Entrega versión 3** | Primera semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
 | **Entrega versión 4** | Penúltima semana de **noviembre** | \_\_\_\_/\_\_\_\_/\_\_\_\_\_\_\_\_ | **20%** — 10% + 10% |
 
-> **Estas son las fechas de la Universidad de San Buenaventura.** El calendario
-> general del proyecto de aula corre tres semanas más tarde; el de aquí va
-> antes, y es el que manda para este curso.
-
 > **"Incluidos los commits"**: en la sustentación individual cada
 > estudiante responde por SU rama, y sus commits lo respaldan. Una rama
 > con un solo commit gigante la noche anterior es una sustentación sin
